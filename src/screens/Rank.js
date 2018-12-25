@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import {View, Dimensions,Text,StatusBar,TouchableWithoutFeedback, FlatList, Modal} from 'react-native';
-import Svg from 'react-native-remote-svg'
+import React, { Component } from 'react';
+import { View, Dimensions, Text, StatusBar, TouchableWithoutFeedback, FlatList, Modal, } from 'react-native';
 
-import Header from '../components/Header'
+import Header from '../components/Rank/Header'
 import BookItem from '../components/common/BookItem'
+import Triangle from '../components/svgs/Triangle'
+import Check from '../components/svgs/Check'
 
 
-const {width} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const lu = width / 750;
 
 
@@ -28,7 +29,8 @@ export default class Rank extends Component {
       itemNo: 10,       // 数据项每页
       isLoading: false, // 网络加载状态
       isTimeShowed: false, // 是否显示时间下拉列表
-      // isCate
+      isCateShowed: false, // if show the categoryList 
+      isTypeShowed: false,
 
     };
   }
@@ -38,40 +40,115 @@ export default class Rank extends Component {
   // keyExtractor
   _keyExtractor = (item) => item.bookId.toString();
 
-  // 字数周榜
+  // all request
   fetchRank = async () => {
-    let {rankList, timeRank, bookTypeId, pageNo, pageSize} = this.state.requestObj,
+    try {
+      let { rankList, timeRank, bookTypeId, pageNo, pageSize } = this.state.requestObj,
         data = await fetch(`http://www.qcacg.com/Controller/rank/getRankingList.shtml?rankList=${rankList}&timeRank=${timeRank}&bookTypeId=${bookTypeId}&pageNo=${pageNo}&pageSize=${[pageSize]}`);
-    console.log(data);
-    let {result} = JSON.parse(data._bodyText);
-    this.setState(() => ({result}));
+      let { result, totalPage } = JSON.parse(data._bodyText);
+      this.setState(() => ({ result, totalPage }));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // 加载更多
   fetchMore = async () => { // 没有设置全部加载完毕之后，不再触发
-    let {rankList, timeRank, bookTypeId, pageSize} = this.state.requestObj,
+    try {
+      let { rankList, timeRank, bookTypeId, pageSize } = this.state.requestObj,
         { pageNo } = this.state;
-    this.setState(() => ({pageNo: pageNo + 1})); // 更新state的当前页数
-    let data = await fetch(`http://www.qcacg.com/Controller/rank/getRankingList.shtml?rankList=${rankList}&timeRank=${timeRank}&bookTypeId=${bookTypeId}&pageNo=${pageNo + 1}&pageSize=${[pageSize]}`);
-    let {result} = JSON.parse(data._bodyText);
-    this.setState(() => ({result: [...this.state.result, ...result]})); // 更新FlatList数据
+      this.setState(() => ({ pageNo: pageNo + 1 })); // 更新state的当前页数
+      let data = await fetch(`http://www.qcacg.com/Controller/rank/getRankingList.shtml?rankList=${rankList}&timeRank=${timeRank}&bookTypeId=${bookTypeId}&pageNo=${pageNo + 1}&pageSize=${[pageSize]}`);
+      let { result } = JSON.parse(data._bodyText);
+      this.setState(() => ({ result: [...this.state.result, ...result] })); // 更新FlatList数据
+    } catch (error) {
+      console.log(error);
+    }
   }
-  
+
+  // switch category of rank
+  switchCate = (bookTypeId) => {
+    if (this.state.requestObj.bookTypeId !== bookTypeId) {
+      this.setState((state) => {
+        let { requestObj } = state;
+        requestObj.bookTypeId = bookTypeId;
+        return { requestObj, isCateShowed: false, pageNo: 1 };
+      }, () => {
+        this.fetchRank();
+        this.flatList.scrollToIndex({ viewPosition: 0, index: 0, animated: false });
+      })
+    }
+  }
+
   // 切换时间
-  switchTime(timeRank) {
-    if(this.state.requestObj.timeRank !== timeRank) { // 只有当前时间选项与点击选项不一致，才进行
+  switchTime = (timeRank) => {
+    // when choose the same option, whether close the options
+    this.setState(() => ({ isTimeShowed: false }));
+    if (this.state.requestObj.timeRank !== timeRank) { // 只有当前时间选项与点击选项不一致，才进行
       this.setState((state) => {// 更改state
         let requestObj = state.requestObj;
         requestObj.timeRank = timeRank;
-        return {requestObj};
+        return { requestObj };
       }, this.fetchRank); // 当timeRank更新成功后，重新进行网络请求
     }
   }
 
+  // switch rank type
+  switchType = (type) => {
+    this.setState(() => ({ isTypeShowed: false }));
+    if (this.state.requestObj.rankList !== type) {
+      this.setState((state) => {
+        let { requestObj } = state;
+        requestObj.rankList = type;
+        return { requestObj };
+      }, this.fetchRank);
+    }
+  }
+
+  // whether show type options list
+
+  toggleType = () => {
+    this.setState((state) => {
+      if (state.isTypeShowed) {
+        return { isTypeShowed: false };
+      } else {
+        return {
+          isTypeShowed: true,
+          isCateShowed: false,
+          isTimeShowed: false,
+        }
+      }
+    });
+  }
+
+  // if show category options list
+  toggleCate = () => {
+    this.setState((state) => {
+      if (state.isCateShowed) {
+        return { isCateShowed: false };
+      } else {
+        return {
+          isCateShowed: true,
+          isTypeShowed: false,
+          isTimeShowed: false,
+        }
+      }
+    });
+  }
+
   // 是否显示时间列表
   toggleTime = () => {
-    this.setState((state) => ({isTimeShowed: !state.isTimeShowed}));
-    console.log(this.state.isTimeShowed);
+    this.setState((state) => {
+      if (state.isTimeShowed) {
+        return { isTimeShowed: false };
+      } else {
+        return {
+          isTimeShowed: true,
+          isCateShowed: false,
+          isTypeShowed: false,
+        }
+      }
+    });
   }
 
   componentDidMount() {
@@ -82,7 +159,7 @@ export default class Rank extends Component {
 
   navigate = (bookId) => {
     console.log(bookId);
-    this.props.navigation.navigate('menu', {bookId: bookId});
+    this.props.navigation.navigate('menu', { bookId: bookId });
     console.log('rank\'s method triggled')
   }
 
@@ -91,142 +168,254 @@ export default class Rank extends Component {
 
   FlatListBg = () => {
     let backgroundColor = '';
-    if(!this.state.isTimeShowed) {
+    if (!this.state.isTimeShowed) {
       backgroundColor = '#fff';
-    } else{
+    } else {
       backgroundColor = 'rgba(152, 152, 152, .5)';
     }
     return backgroundColor;
   }
 
 
+  // render the time options list
+  renderTimeOptions = () => {
+    let { timeRank } = this.state.requestObj,
+      timeOptions = ['周榜', '月榜', '总榜'];
+    if (this.state.isTimeShowed) {
+      return (
+        <View style={{
+          width: width,
+          height: height - 176 * lu,
+          position: 'absolute',
+          top: 88 * lu,
+          left: 0,
+          zIndex: 1
+        }}>
+          <View style={{ backgroundColor: '#fff' }}>
+            {timeOptions.map((item, index) => (
+              <TouchableWithoutFeedback onPress={() => { this.switchTime(index) }} key={index}>
+                <View style={{
+                  height: 88 * lu,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#f2f2f2',
+                  alignItems: 'center',
+                  paddingLeft: 30 * lu,
+                  flexDirection: 'row'
+                }}>
+                  <Text style={{
+                    marginRight: 600 * lu,
+                    fontSize: 28 * lu,
+                    color: timeRank == index ? '#ff9a49' : '#565656',
+                  }}>
+                    {item}
+                  </Text>
+                  <Check selected={index == timeRank} />
+                </View>
+              </TouchableWithoutFeedback>
+            ))}
+          </View>
+          <TouchableWithoutFeedback onPress={this.toggleTime}>
+            <View style={{flex: 1, backgroundColor: 'rgba(0,0,0, .1)'}}></View>
+          </TouchableWithoutFeedback>
+        </View>
+      )
+    } else {
+      return null;
+    }
+  }
 
   render() {
     let {
       rankList,
       bookTypeId,
-      timeRank,
     } = this.state.requestObj;
 
-    // 时间列表
-    let timeOptions = 
-      <View style={{position: 'absolute', top: 88 * lu, left: 0, width: width, backgroundColor: '#fff', zIndex: 2}}>
-        <TouchableWithoutFeedback onPress={() => {this.switchTime(0)}}>
-          <View style={{height: 88 * lu, borderBottomWidth: 1, borderBottomColor: '#282828', alignItems: 'center', paddingLeft: 30 * lu, flexDirection: 'row'}}>
-            <Text style={{marginRight: 600 * lu, fontSize: 32 * lu, color: timeRank == 0 ? '#fedc6f' : '#565656'}}>周榜</Text>
-            {timeRank == 0 ? <Svg source={require('../assets/svgs/_selected.svg')} style={{width: 32 * lu, height: 32 * lu,}} /> : null}
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => {this.switchTime(1)}}>
-          <View style={{height: 88 * lu, borderBottomWidth: 1, borderBottomColor: '#282828', alignItems: 'center', paddingLeft: 30 * lu, flexDirection: 'row'}}>
-            <Text style={{marginRight: 600 * lu, fontSize: 32 * lu, color: timeRank == 1 ? '#fedc6f' : '#565656'}}>月榜</Text>
-            {timeRank == 1 ? <Svg source={require('../assets/svgs/_selected.svg')} style={{width: 32 * lu, height: 32 * lu,}} /> : null}
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => {this.switchTime(2)}}>
-          <View style={{height: 88 * lu, borderBottomWidth: 1, borderBottomColor: '#282828', alignItems: 'center', paddingLeft: 30 * lu, flexDirection: 'row'}}>
-            <Text style={{marginRight: 600 * lu, fontSize: 32 * lu, color: timeRank == 2 ? '#fedc6f' : '#565656', }}>总榜</Text>
-            {timeRank == 2 ? <Svg source={require('../assets/svgs/_selected.svg')} style={{width: 32 * lu, height: 32 * lu,}} /> : null}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-
-      // 分类列表
-      let cateArr = [
-        {bookTypeName: '全部', bookTypeId: ''}, 
-        {bookTypeName: '战斗', bookTypeId: 1}, 
-        {bookTypeName: '幻想', bookTypeId: 2}, 
-        {bookTypeName: '恋爱', bookTypeId: 3}, 
-        {bookTypeName: '异界', bookTypeId: 4}, 
-        {bookTypeName: '搞笑', bookTypeId: 5}, 
-        {bookTypeName: '日常', bookTypeId: 6}, 
-        {bookTypeName: '校园', bookTypeId: 7}, 
-        {bookTypeName: '后宫', bookTypeId: 8}, 
-        {bookTypeName: '推理', bookTypeId: 9}, 
-        {bookTypeName: '科幻', bookTypeId: 10}, 
-        {bookTypeName: '治愈', bookTypeId: 11}, 
-        {bookTypeName: '超能力', bookTypeId: 12}, 
-        {bookTypeName: '恐怖', bookTypeId: 13}, 
-        {bookTypeName: '伪娘', bookTypeId: 14}, 
-        {bookTypeName: '乙女', bookTypeId: 15}, 
-        {bookTypeName: '同人', bookTypeId: 16}, 
-        {bookTypeName: '悬疑', bookTypeId: 17},
-        {bookTypeName: '网游', bookTypeId: 18}
-      ];
-      let cateOption =
-        <View style={{width: width, height: 440 * lu, position:'absolute', zIndex: 2, top: 86 * lu, flexDirection: 'row', flexWrap: 'wrap', backgroundColor: '#fff'}}>
+    // 分类列表
+    let cateArr = [
+      { bookTypeName: '全部', bookTypeId: '' },
+      { bookTypeName: '战斗', bookTypeId: 1 },
+      { bookTypeName: '幻想', bookTypeId: 2 },
+      { bookTypeName: '恋爱', bookTypeId: 3 },
+      { bookTypeName: '异界', bookTypeId: 4 },
+      { bookTypeName: '搞笑', bookTypeId: 5 },
+      { bookTypeName: '日常', bookTypeId: 6 },
+      { bookTypeName: '校园', bookTypeId: 7 },
+      { bookTypeName: '后宫', bookTypeId: 8 },
+      { bookTypeName: '推理', bookTypeId: 9 },
+      { bookTypeName: '科幻', bookTypeId: 10 },
+      { bookTypeName: '治愈', bookTypeId: 11 },
+      { bookTypeName: '超能力', bookTypeId: 12 },
+      { bookTypeName: '恐怖', bookTypeId: 13 },
+      { bookTypeName: '伪娘', bookTypeId: 14 },
+      { bookTypeName: '乙女', bookTypeId: 15 },
+      { bookTypeName: '同人', bookTypeId: 16 },
+      { bookTypeName: '悬疑', bookTypeId: 17 },
+      { bookTypeName: '网游', bookTypeId: 18 }
+    ];
+    let cateOptions =
+      <View style={{
+        width: width,
+        height: height - 176 * lu,
+        position: 'absolute',
+        zIndex: 1,
+        top: 88 * lu,
+        right: 0,
+      }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            backgroundColor: '#fff',
+          }}>
           {cateArr.map((item) => (
-          <TouchableWithoutFeedback key={item.bookTypeId} onPress={() => {this.setState(() => ({bookTypeId: item.bookTypeId}), this.fetchRank)}}>
-            <View style={{width: width / 4, height: 88 * lu, alignItems: 'center', justifyContent: 'center'}}>
-              <Text style={{
-                textAlign: 'center', 
-                textAlignVertical: 'center', 
-                width: 3/16 * width, 
-                height: 44 * lu, 
-                borderRadius: 22 * lu, 
-                color: this.state.requestObj.bookTypeId == item.bookTypeId ? '#fff' : '#565656', 
-                backgroundColor: this.state.requestObj.bookTypeId == item.bookTypeId ? '#fedc6f' : '#fff'
+            <TouchableWithoutFeedback key={item.bookTypeId} onPress={() => { this.switchCate(item.bookTypeId) }}>
+              <View style={{ width: width / 4, height: 88 * lu, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  width: 3 / 16 * width,
+                  height: 44 * lu,
+                  borderRadius: 22 * lu,
+                  color: bookTypeId == item.bookTypeId ? '#fff' : '#565656',
+                  backgroundColor: bookTypeId == item.bookTypeId ? '#ff9a49' : '#fff',
                 }}>
                   {item.bookTypeName}
                 </Text>
-            </View>
-          </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
           ))
           }
         </View>
-      
-    
+        <TouchableWithoutFeedback onPress={this.toggleCate}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0, .1)'
+            }}
+          ></View>
+        </TouchableWithoutFeedback>
+      </View>
+
+    // rankList 
+    let rankTypes = ['好人榜', '点击榜', '字数榜'];
+    let rankTypeOptions =
+      <View style={{
+        width: width,
+        height: height - 88 * lu,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 1,
+      }}>
+        <View style={{ backgroundColor: '#fff' }}>
+          {rankTypes.map((item, index) => (
+            <TouchableWithoutFeedback onPress={() => { this.switchType(index) }} key={item}>
+              <View style={{
+                height: 88 * lu,
+                borderBottomWidth: 1,
+                borderBottomColor: '#f2f2f2',
+                alignItems: 'center',
+                paddingLeft: 30 * lu,
+                flexDirection: 'row'
+              }}>
+                <Text style={{
+                  marginRight: 600 * lu,
+                  fontSize: 32 * lu,
+                  color: rankList == index ? '#ff9a49' : '#565656'
+                }}>{item}</Text>
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: 30 * lu,
+                  }}
+                >
+                  <Check selected={rankList == index} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          ))}
+        </View>
+        <TouchableWithoutFeedback onPress={this.switchType}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .1)' }}></View>
+        </TouchableWithoutFeedback>
+      </View>
+
+    console.log('chonghui')
+
+    // Header props rankList 
+
+    switch (rankList) {
+      case 0:
+        rankList = '好人榜';
+        break;
+      case 1:
+        rankList = '点击榜';
+        break;
+      default:
+        rankList = '字数榜';
+        break;
+    }
+
+
     return (
-      <View style={{flex: 1,}}>
+      <View style={{ flex: 1, }}>
 
-        <StatusBar 
-        backgroundColor={'#fff'}
-        barStyle={'dark-content'}
-        translucent />
+        <StatusBar
+          backgroundColor={'#fff'}
+          barStyle={'dark-content'}
+          translucent />
 
-        <Header style={{marginTop: StatusBar.currentHeight, heihgt: 88 * lu}} title={'排行榜'} />
+        <Header
+          style={{ marginTop: StatusBar.currentHeight, heihgt: 88 * lu }}
+          title={'排行榜'}
+          rankList={rankList}
+          toggleType={this.toggleType} />
 
-        <View style={{height: 88 * lu, flexDirection: 'row', borderTopWidth: 1 *lu, borderTopColor: '#f2f2f2', zIndex: 1}}>
 
-          <TouchableWithoutFeedback>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{color: '#fedc6f', fontSize: 32 * lu, marginRight: 20 * lu,}}>分类</Text>
-              <Svg source={require('../assets/svgs/pull-down.svg')} style={{width: 32 * lu, height: 32 * lu}} />
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.toggleTime}>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{fontSize: 32 * lu, marginRight: 20 * lu, color: this.state.isTimeShowed ? '#fedc6f' : '#565656'}}>时间</Text>
-              <Svg source={this.state.isTimeShowed ? require('../assets/svgs/pull-down-yellow.svg') : require('../assets/svgs/pull-down.svg')} style={{width: 32 * lu, height: 32 * lu}} />
-            </View>
-          </TouchableWithoutFeedback>
-          {this.state.isTimeShowed ? timeOptions : null}
-          {/* {cateOption} */}
+        <View style={{ flex: 1, }}>
+
+          <View style={{ height: 88 * lu, flexDirection: 'row', borderTopWidth: 1 * lu, borderTopColor: '#f2f2f2', zIndex: 1 }}>
+
+            <TouchableWithoutFeedback onPress={this.toggleCate}>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{
+                  color: this.state.isCateShowed ? '#ff9a49' : '#565656',
+                  fontSize: 32 * lu,
+                  marginRight: 20 * lu,
+                }}>分类</Text>
+                <Triangle selected={this.state.isCateShowed} />
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={this.toggleTime}>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{
+                  fontSize: 32 * lu,
+                  marginRight: 20 * lu,
+                  color: this.state.isTimeShowed ? '#ff9a49' : '#565656'
+                }}>时间</Text>
+                <Triangle selected={this.state.isTimeShowed} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          {this.state.isTypeShowed && rankTypeOptions}
+
+          {this.renderTimeOptions()}
+
+          {this.state.isCateShowed && cateOptions}
+
+          <FlatList
+            ref={(flatList) => { this.flatList = flatList }}
+            style={{ zIndex: 0 }}
+            data={this.state.result}
+            renderItem={({ item }) => (
+              <BookItem book={item} navigation={this.navigate} />
+            )}
+            keyExtractor={this._keyExtractor}
+            onEndReached={this.fetchMore}
+            onEndReachedThreshold={100} />
+
         </View>
-
-        <View style={{width: width, height: 108 * lu}}>
-          <Modal
-            animationType={'slide'}
-            transparent={false}
-            visible={true}
-            onRequestClose={() => {console.log('Modal has been closed.')}}
-          >
-            <View style={{width: width, height: 88 * lu, backgroundColor: 'pink'}}>
-              <Text>Hello world</Text>
-            </View>
-          </Modal>
-        </View>
-        
-
-        <FlatList
-          style={{backgroundColor: this.FlatListBg(), zIndex: 0}}
-          data={this.state.result}
-          renderItem={({item}) => (
-            <BookItem book={item} navigation={this.navigate} />
-          )}
-          keyExtractor={this._keyExtractor} 
-          onEndReached={this.fetchMore}
-          onEndReachedThreshold={100} />
 
       </View>
     )

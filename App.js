@@ -4,11 +4,16 @@ import {Easing, Animated} from 'react-native'
 import Home from './src/screens/Home';
 import Menu from './src/screens/Menu';
 import Rank from './src/screens/Rank';
+import Cate from './src/screens/Cate';
+import Percenter from './src/screens/Percenter';
 
 
 const AppNavigator = createStackNavigator({
-  Rank,
+
   Home,
+  Percenter,
+  Cate,
+  Rank,
   Menu,
 },
 {
@@ -41,7 +46,6 @@ const AppNavigator = createStackNavigator({
       }
     })
 }
-
 );
 
 
