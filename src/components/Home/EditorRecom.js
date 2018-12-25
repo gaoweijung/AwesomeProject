@@ -40,7 +40,6 @@ export default class EitorRecom extends Component {
   }
 
   navigate = (bookId) => {
-    console.log(bookId);
     this.props.navigate(bookId);
   }
 

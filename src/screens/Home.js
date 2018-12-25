@@ -43,7 +43,8 @@ export default class extends Component {
     this.props.navigation.navigate('Menu', { bookId: bookId })
   }
 
-  componentDidMount() {
+  navigateToRank = (rankList) => {
+    this.props.navigation.navigate('Rank', { rankList: rankList })
   }
 
   render() {
@@ -195,7 +196,7 @@ export default class extends Component {
 
           {/* 好人榜 */}
 
-          <RankHeader title='好人榜' navigate={this.navigate} />
+          <RankHeader title='好人榜' navigate={this.navigateToRank} rankList={0} />
           <GoodPeoRank navigate={this.navigate} />
           <View style={{
             width: width,
@@ -204,7 +205,7 @@ export default class extends Component {
           }}></View>
 
           {/* 点击榜 */}
-          <RankHeader title='点击榜' navigate={this.navigate} />
+          <RankHeader title='点击榜' navigate={this.navigateToRank} rankList={1} />
           <ClickRank navigate={this.navigate} />
           <View style={{
             width: width,
@@ -223,7 +224,7 @@ export default class extends Component {
 
           {/* 字数榜 */}
 
-          <RankHeader title='字数榜' navigate={this.navigate} />
+          <RankHeader title='字数榜' navigate={this.navigateToRank} rankList={2} />
 
           <WordAccRank navigate={this.navigate} />
           <View style={{
@@ -265,7 +266,7 @@ export default class extends Component {
           }}></View>
 
           {/* 最新更新 */}
-          <RankHeader title='点击榜' navigate={this.navigate} />
+          <RankHeader title='点击榜' navigate={this.navigateToRank} />
           <NewRank navigate={this.navigate} />
         </ScrollView>
       </View >

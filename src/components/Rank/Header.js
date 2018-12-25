@@ -18,7 +18,6 @@ export default class Header extends Component {
 
   toggleType = () => {
     this.props.toggleType();
-    console.log(`method in child component has been trigered`)
   }
 
   render() {

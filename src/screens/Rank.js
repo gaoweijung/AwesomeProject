@@ -18,7 +18,7 @@ export default class Rank extends Component {
     this.state = {
       result: [],
       requestObj: {     // 请求参数
-        rankList: 0,    // 好人、字数、点击
+        rankList: this.props.navigation.getParam('rankList', 0),    // 好人、字数、点击
         timeRank: 0,    // 周、月、总
         bookTypeId: '', // 书类
         pageNo: 1,      // 页数
@@ -48,7 +48,7 @@ export default class Rank extends Component {
       let { result, totalPage } = JSON.parse(data._bodyText);
       this.setState(() => ({ result, totalPage }));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -62,7 +62,7 @@ export default class Rank extends Component {
       let { result } = JSON.parse(data._bodyText);
       this.setState(() => ({ result: [...this.state.result, ...result] })); // 更新FlatList数据
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -158,9 +158,7 @@ export default class Rank extends Component {
   // 导航方法
 
   navigate = (bookId) => {
-    console.log(bookId);
     this.props.navigation.navigate('menu', { bookId: bookId });
-    console.log('rank\'s method triggled')
   }
 
 
@@ -340,7 +338,6 @@ export default class Rank extends Component {
         </TouchableWithoutFeedback>
       </View>
 
-    console.log('chonghui')
 
     // Header props rankList 
 
@@ -368,6 +365,7 @@ export default class Rank extends Component {
         <Header
           style={{ marginTop: StatusBar.currentHeight, heihgt: 88 * lu }}
           title={'排行榜'}
+          goBack={this.props.navigation.goBack}
           rankList={rankList}
           toggleType={this.toggleType} />
 

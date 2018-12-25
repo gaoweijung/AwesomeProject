@@ -36,14 +36,12 @@ export default class EitorRecom extends Component {
       }, [])
 
       this.setState(() => ({ response }));
-      console.log(this.state.response);
     } catch (error) {
       console.error(error);
     }
   }
 
   navigate = (bookId) => {
-    console.log(bookId);
     this.props.navigate(bookId);
   }
 

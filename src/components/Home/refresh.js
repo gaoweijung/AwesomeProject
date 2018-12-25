@@ -9,7 +9,6 @@ export default class RotateView extends Component {
   }
 
   rotate = () => {
-    console.log(this.state.rotateValue, 'animation starts!');
     Animated.timing(                  // 随时间变化而执行动画
       this.state.rotateValue,            // 动画中的变量值
       {
@@ -17,7 +16,6 @@ export default class RotateView extends Component {
         duration: 1000,              // 让动画持续一段时间
       }
     ).start(); 
-    console.log('动画结束了', this.state.rotateValue);
     this.setState({
       rotateValue: new Animated.Value(0)
     })  

@@ -27,7 +27,7 @@ export default class RankHeader extends Component {
           fontSize: 30 * lu,
           color: '#282828',
         }}>{this.props.title}</Text>
-        <TouchableWithoutFeedback onPress={this.props.navigate}>
+        <TouchableWithoutFeedback onPress={() => {this.props.navigate(this.props.rankList)}}>
           <View style={{ height: 88 * lu, width: 96 * lu, position: 'absolute', right: 30 * lu, flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ marginRight: 26 * lu }}>更多</Text>
             <SvgRemote

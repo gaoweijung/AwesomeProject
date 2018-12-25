@@ -9,12 +9,11 @@ import Percenter from './src/screens/Percenter';
 
 
 const AppNavigator = createStackNavigator({
-
+  Menu,
   Home,
+  Rank,
   Percenter,
   Cate,
-  Rank,
-  Menu,
 },
 {
   headerMode: 'none',

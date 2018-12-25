@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Dimensions, ScrollView, StatusBar, Image, TouchableNativeFeedback } from 'react-native';
+import { View, Text, Dimensions, ScrollView, StatusBar, Image, TouchableNativeFeedback, Animated } from 'react-native';
 import Svg from 'react-native-remote-svg';
 
 import Header from '../components/Header'
