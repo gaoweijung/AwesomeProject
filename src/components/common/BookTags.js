@@ -12,7 +12,7 @@ export default class BookTags extends Component {
   }
 
   render() {
-    return (
+    return this.props.bookTags ? (
       <View style={{ flexDirection: 'row', ...this.props.style }}>{this.props.bookTags.map((item, index) => (
         <Text
           key={index}
@@ -30,7 +30,8 @@ export default class BookTags extends Component {
           {item.bookTypeName}
         </Text>
       ))}</View>
-    )
+    ) :
+    null;
   };
   
 }

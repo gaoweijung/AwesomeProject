@@ -148,8 +148,15 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-text-size')
+    compile project(':react-native-cn-tts')
+    compile project(':react-native-picker')
+    compile project(':react-native-modal-translucent')
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-svg')
     compile project(':react-native-gesture-handler')
+    compile project(':react-native-fs')
+    // compile project(':react-native-device-battery')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules

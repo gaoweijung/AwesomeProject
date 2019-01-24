@@ -4,7 +4,7 @@ import { View, Text, Dimensions, TouchableWithoutFeedback, Image, FlatList } fro
 const { width } = Dimensions.get('window');
 const lu = width / 750;
 
-export default class componentName extends Component {
+export default class GoodPeoRank extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,6 @@ export default class componentName extends Component {
     }
   }
 
-  generateKey = (key) => (key.toString());
 
 
   render() {
@@ -41,7 +40,7 @@ export default class componentName extends Component {
           data={this.state.goodPeoRank.length ? this.state.goodPeoRank : [{ imgSrc: require('../../assets/images/defaultBook.png'), bookName: '加载中', key: 1 }]}
           renderItem={({ item }) => {
             return (
-              <TouchableWithoutFeedback onPress={() => { this.props.navigate(item.key)}}>
+              <TouchableWithoutFeedback onPress={() => { this.props.navigate(item.key)}} >
                 <View>
                   <View style={{ marginLeft: 30 * lu, alignItems: 'center', width: 136 * lu }}>
                     <Image source={item.imgSrc} style={{
@@ -59,7 +58,7 @@ export default class componentName extends Component {
           horizontal
           style={{ height: 310 * lu, borderTopWidth: 1 * lu, borderTopColor: 'rgb(242, 242, 242)', paddingTop: 20 * lu, overflow: 'hidden' }}
           showsHorizontalScrollIndicator={false}
-          kyeExtractor={() => { return  this.generateKey(item.key)}}
+          keyExtractor={(item, index) => index.toString()}
         />
 
       </View>

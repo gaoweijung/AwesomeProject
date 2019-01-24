@@ -9,6 +9,27 @@ import Check from '../components/svgs/Check'
 
 const { width, height } = Dimensions.get('window');
 const lu = width / 750;
+const CATEGORIES = [
+  { bookTypeName: '全部', bookTypeId: '' },
+  { bookTypeName: '战斗', bookTypeId: 1 },
+  { bookTypeName: '幻想', bookTypeId: 2 },
+  { bookTypeName: '恋爱', bookTypeId: 3 },
+  { bookTypeName: '异界', bookTypeId: 4 },
+  { bookTypeName: '搞笑', bookTypeId: 5 },
+  { bookTypeName: '日常', bookTypeId: 6 },
+  { bookTypeName: '校园', bookTypeId: 7 },
+  { bookTypeName: '后宫', bookTypeId: 8 },
+  { bookTypeName: '推理', bookTypeId: 9 },
+  { bookTypeName: '科幻', bookTypeId: 10 },
+  { bookTypeName: '治愈', bookTypeId: 11 },
+  { bookTypeName: '超能力', bookTypeId: 12 },
+  { bookTypeName: '恐怖', bookTypeId: 13 },
+  { bookTypeName: '伪娘', bookTypeId: 14 },
+  { bookTypeName: '乙女', bookTypeId: 15 },
+  { bookTypeName: '同人', bookTypeId: 16 },
+  { bookTypeName: '悬疑', bookTypeId: 17 },
+  { bookTypeName: '网游', bookTypeId: 18 }
+]
 
 
 export default class Rank extends Component {
@@ -229,27 +250,6 @@ export default class Rank extends Component {
     } = this.state.requestObj;
 
     // 分类列表
-    let cateArr = [
-      { bookTypeName: '全部', bookTypeId: '' },
-      { bookTypeName: '战斗', bookTypeId: 1 },
-      { bookTypeName: '幻想', bookTypeId: 2 },
-      { bookTypeName: '恋爱', bookTypeId: 3 },
-      { bookTypeName: '异界', bookTypeId: 4 },
-      { bookTypeName: '搞笑', bookTypeId: 5 },
-      { bookTypeName: '日常', bookTypeId: 6 },
-      { bookTypeName: '校园', bookTypeId: 7 },
-      { bookTypeName: '后宫', bookTypeId: 8 },
-      { bookTypeName: '推理', bookTypeId: 9 },
-      { bookTypeName: '科幻', bookTypeId: 10 },
-      { bookTypeName: '治愈', bookTypeId: 11 },
-      { bookTypeName: '超能力', bookTypeId: 12 },
-      { bookTypeName: '恐怖', bookTypeId: 13 },
-      { bookTypeName: '伪娘', bookTypeId: 14 },
-      { bookTypeName: '乙女', bookTypeId: 15 },
-      { bookTypeName: '同人', bookTypeId: 16 },
-      { bookTypeName: '悬疑', bookTypeId: 17 },
-      { bookTypeName: '网游', bookTypeId: 18 }
-    ];
     let cateOptions =
       <View style={{
         width: width,
@@ -265,7 +265,7 @@ export default class Rank extends Component {
             flexWrap: 'wrap',
             backgroundColor: '#fff',
           }}>
-          {cateArr.map((item) => (
+          {CATEGORIES.map((item) => (
             <TouchableWithoutFeedback key={item.bookTypeId} onPress={() => { this.switchCate(item.bookTypeId) }}>
               <View style={{ width: width / 4, height: 88 * lu, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{
@@ -372,7 +372,7 @@ export default class Rank extends Component {
 
         <View style={{ flex: 1, }}>
 
-          <View style={{ height: 88 * lu, flexDirection: 'row', borderTopWidth: 1 * lu, borderTopColor: '#f2f2f2', zIndex: 1 }}>
+          <View style={{ height: 88 * lu, flexDirection: 'row', borderTopWidth: 1 * lu, borderTopColor: '#c3c3c3', zIndex: 1 }}>
 
             <TouchableWithoutFeedback onPress={this.toggleCate}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>

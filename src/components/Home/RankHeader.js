@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import SvgRemote from 'react-native-remote-svg';
 
+import Svg from '../svgs/Svg';
+
 
 const { width } = Dimensions.get('window');
 const lu = width / 750;
@@ -30,9 +32,7 @@ export default class RankHeader extends Component {
         <TouchableWithoutFeedback onPress={() => {this.props.navigate(this.props.rankList)}}>
           <View style={{ height: 88 * lu, width: 96 * lu, position: 'absolute', right: 30 * lu, flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ marginRight: 26 * lu }}>更多</Text>
-            <SvgRemote
-              source={require('../../assets/svgs/right.svg')}
-              style={{ width: 14 * lu, height: 26 * lu, marginTop: -4 * lu }} />
+            <Svg icon="right" size={26 * lu} style={{marginTop: -4 * lu}} />
           </View>
         </TouchableWithoutFeedback>
       </View>

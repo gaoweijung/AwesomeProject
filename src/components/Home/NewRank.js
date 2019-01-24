@@ -31,7 +31,6 @@ export default class componentName extends Component {
     }
   }
 
-  generateKey = (key) => (key.toString());
   
   render() {
     return (
@@ -58,7 +57,7 @@ export default class componentName extends Component {
           horizontal
           style={{ height: 310 * lu, borderTopWidth: 1 * lu, borderTopColor: 'rgb(242, 242, 242)', paddingTop: 20 * lu, overflow: 'hidden' }}
           showsHorizontalScrollIndicator={false}
-          kyeExtractor={() => {this.generateKey(item.key)}}
+          keyExtractor={(item, index) => index.toString()}
         />
 
       </View>

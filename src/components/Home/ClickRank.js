@@ -4,7 +4,7 @@ import { View, Text, Dimensions, TouchableWithoutFeedback, Image, FlatList } fro
 const { width } = Dimensions.get('window');
 const lu = width / 750;
 
-export default class componentName extends Component {
+export default class ClickRank extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ export default class componentName extends Component {
     }
   }
 
-  generateKey = (key) => (key.toString());
+  _keyExtractor =(item, index) => item.key.toString()
 
   render() {
     return (
@@ -58,7 +58,7 @@ export default class componentName extends Component {
           horizontal
           style={{ height: 310 * lu, borderTopWidth: 1 * lu, borderTopColor: 'rgb(242, 242, 242)', paddingTop: 20 * lu, overflow: 'hidden' }}
           showsHorizontalScrollIndicator={false}
-          kyeExtractor={() => {this.generateKey(item.key)}}
+          keyExtractor={this._keyExtractor}
         />
 
       </View>

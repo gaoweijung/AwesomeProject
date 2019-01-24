@@ -6,18 +6,19 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native'
 import Swiper from 'react-native-swiper'
-import Svg from 'react-native-remote-svg'
-
 
 import EitorRecom from '../components/Home/EditorRecom';
-import GoodPeoRank from '../components/Home/GoodPeoRank';
-import ClickRank from '../components/Home/ClickRank';
-import WordAccRank from '../components/Home/WordAccRank';
-import NewRank from '../components/Home/NewRank';
+// import GoodPeoRank from '../components/Home/GoodPeoRank';
+// import ClickRank from '../components/Home/ClickRank';
+// import WordAccRank from '../components/Home/WordAccRank';
+// import NewRank from '../components/Home/NewRank';
 import WebRecom from '../components/Home/WebRecom';
-import RankHeader from '../components/Home/RankHeader';
+// import RankHeader from '../components/Home/RankHeader';
+import Svg from '../components/svgs/Svg';
 
 
 const { width, height } = Dimensions.get('window')
@@ -61,6 +62,7 @@ export default class extends Component {
             width: width,
             height: lu * 108,
             alignItems: 'center',
+            justifyContent: 'center',
             overflow: 'hidden',
           }}>
             <Image source={require('../assets/images/profile_icon.jpg')}
@@ -68,29 +70,26 @@ export default class extends Component {
                 width: 58 * lu,
                 height: 58 * lu,
                 borderRadius: 29 * lu,
-                marginLeft: 30 * lu,
-                marginRight: 30 * lu,
+                position: 'absolute',
+                left: 30 * lu,
               }} />
+            <Text style={{
+              fontSize: 32 * lu,
+              color: '#333333',
+            }}>书城</Text>
+            <TouchableWithoutFeedback>
             <View style={{
-              width: 602 * lu,
-              height: 68 * lu,
-              backgroundColor: 'rgb(255, 182, 67)',
-              borderRadius: 15 * lu,
-              flexDirection: 'row',
+              height: 108 * lu,
+              width: 88 * lu,
               alignItems: 'center',
-              paddingLeft: 48 * lu,
+              justifyContent: 'center',
+              position: 'absolute',
+              right: 0,
             }}>
-              <Image source={require('../assets/images/search.png')}
-                style={{
-                  width: 28 * lu,
-                  height: 28 * lu,
-                  marginRight: 20 * lu,
-                }} />
-              <Text style={{
-                fontSize: 28 * lu,
-                color: '#fff',
-              }}>点击此处进行搜索</Text>
+              <Svg icon="search1" size={28 * lu} />
             </View>
+            </TouchableWithoutFeedback>
+
           </View>
 
         </View>
@@ -134,48 +133,51 @@ export default class extends Component {
             height: 166 * lu,
             flexDirection: 'row',
           }}>
-            <View style={{
-              flex: 1,
-              alignItems: 'center',
-              height: 166 * lu,
-              paddingTop: 30 * lu,
-            }}>
-              <Svg source={require('../assets/svgs/clses.svg')}
-                style={{ width: 58 * lu, height: 58 * lu, }} />
-              <Text style={{
-                fontSize: 28 * lu,
-                color: '#656565',
-                marginTop: 20 * lu,
-              }}>分类</Text>
-            </View>
-            <View style={{
-              flex: 1,
-              alignItems: 'center',
-              height: 166 * lu,
-              paddingTop: 30 * lu,
-            }}>
-              <Svg source={require('../assets/svgs/ranks.svg')}
-                style={{ width: 58 * lu, height: 58 * lu, }} />
-              <Text style={{
-                fontSize: 28 * lu,
-                color: '#656565',
-                marginTop: 20 * lu,
-              }}>排行榜</Text>
-            </View>
-            <View style={{
-              flex: 1,
-              alignItems: 'center',
-              height: 166 * lu,
-              paddingTop: 30 * lu,
-            }}>
-              <Svg source={require('../assets/svgs/activity.svg')}
-                style={{ width: 58 * lu, height: 58 * lu, }} />
-              <Text style={{
-                fontSize: 28 * lu,
-                color: '#656565',
-                marginTop: 20 * lu,
-              }}>活动</Text>
-            </View>
+            <TouchableWithoutFeedback>
+              <View style={{
+                flex: 1,
+                alignItems: 'center',
+                height: 166 * lu,
+                paddingTop: 30 * lu,
+              }}>
+                <Svg icon="clses" size={58 * lu} />
+                <Text style={{
+                  fontSize: 28 * lu,
+                  color: '#656565',
+                  marginTop: 20 * lu,
+                }}>分类</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => { this.props.navigation.navigate('Rank') }}>
+              <View style={{
+                flex: 1,
+                alignItems: 'center',
+                height: 166 * lu,
+                paddingTop: 30 * lu,
+              }}>
+                <Svg icon="ranks" size={58 * lu} />
+                <Text style={{
+                  fontSize: 28 * lu,
+                  color: '#656565',
+                  marginTop: 20 * lu,
+                }}>排行榜</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View style={{
+                flex: 1,
+                alignItems: 'center',
+                height: 166 * lu,
+                paddingTop: 30 * lu,
+              }}>
+                <Svg icon="activity" size={58 * lu} />
+                <Text style={{
+                  fontSize: 28 * lu,
+                  color: '#656565',
+                  marginTop: 20 * lu,
+                }}>活动</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
 
           <View style={{
@@ -196,22 +198,22 @@ export default class extends Component {
 
           {/* 好人榜 */}
 
-          <RankHeader title='好人榜' navigate={this.navigateToRank} rankList={0} />
+          {/* <RankHeader title='好人榜' navigate={this.navigateToRank} rankList={0} />
           <GoodPeoRank navigate={this.navigate} />
           <View style={{
             width: width,
             height: 20 * lu,
             backgroundColor: 'rgb(242, 242, 242)',
-          }}></View>
+          }}></View> */}
 
           {/* 点击榜 */}
-          <RankHeader title='点击榜' navigate={this.navigateToRank} rankList={1} />
+          {/* <RankHeader title='点击榜' navigate={this.navigateToRank} rankList={1} />
           <ClickRank navigate={this.navigate} />
           <View style={{
             width: width,
             height: 20 * lu,
             backgroundColor: 'rgb(242, 242, 242)',
-          }}></View>
+          }}></View> */}
 
 
           {/* 全站推荐 */}
@@ -224,14 +226,14 @@ export default class extends Component {
 
           {/* 字数榜 */}
 
-          <RankHeader title='字数榜' navigate={this.navigateToRank} rankList={2} />
+          {/* <RankHeader title='字数榜' navigate={this.navigateToRank} rankList={2} />
 
           <WordAccRank navigate={this.navigate} />
           <View style={{
             width: width,
             height: 20 * lu,
             backgroundColor: 'rgb(242, 242, 242)',
-          }}></View>
+          }}></View> */}
 
           {/* 新书推荐 */}
 
@@ -242,20 +244,14 @@ export default class extends Component {
             paddingLeft: 30 * lu,
             overflow: 'hidden'
           }}>
-            <Svg source={require('../assets/svgs/crown.svg')} style={{
-              width: 48 * lu,
-              height: 48 * lu,
-            }} />
+            <Svg icon="crown" size={48 * lu} />
             <Text style={{
               marginLeft: 20 * lu,
               marginRight: 470 * lu,
               fontSize: 30 * lu,
               color: '#282828',
             }}>新书推荐</Text>
-            <Svg source={require('../assets/svgs/Refresh.svg')} style={{
-              width: 32 * lu,
-              height: 32 * lu,
-            }} />
+            <Svg icon="Refresh" size={32 * lu} />
           </View>
 
 
@@ -265,9 +261,10 @@ export default class extends Component {
             backgroundColor: 'rgb(242, 242, 242)',
           }}></View>
 
-          {/* 最新更新 */}
+          {/* 最新更新
           <RankHeader title='点击榜' navigate={this.navigateToRank} />
-          <NewRank navigate={this.navigate} />
+          <NewRank navigate={this.navigate} /> */}
+          {/* <ActivityIndicator animating={true} color="gray" hidesWhenStopped={true} /> */}
         </ScrollView>
       </View >
     )

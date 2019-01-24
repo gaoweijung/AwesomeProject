@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, TouchableWithoutFeedback, Image } from 'react-native';
-import SvgRemote from 'react-native-remote-svg';
 
 import RotateView from '../Home/refresh';
 import BookTags from '../common/BookTags';
+import Svg from '../svgs/Svg';
 
 const { width } = Dimensions.get('window');
 const lu = width / 750;
@@ -55,16 +55,17 @@ export default class EitorRecom extends Component {
 
         <View style={{
           height: 98 * lu,
-          paddingLeft: 30 * lu,
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-          <SvgRemote source={require('../../assets/svgs/crown.svg')} style={{ width: 48 * lu, height: 48 * lu, }} />
+          <Svg icon="crown" size={48 * lu} color="#f88e26" style={{position: 'absolute', left: 30 * lu, top: 25 * lu}} />
           <Text style={{
-            marginLeft: 20 * lu,
+            marginLeft: 98 * lu,
             marginRight: 470 * lu,
             fontSize: 30 * lu,
             color: '#282828',
+            height: 98 * lu,
+            lineHeight: 98 * lu, 
           }}>全站推荐</Text>
           <RotateView  update={this.updateWebRecom} viewStyle={{ marginRight: 30 * lu }} svgStyle={{ height: 32 * lu, width: 32 * lu, }} />
         </View>

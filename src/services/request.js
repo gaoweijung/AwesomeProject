@@ -321,4 +321,4 @@ PathList.carouse = PathList.rootPath + '/carouse/adminList.shtml';
 //获取版本号
 PathList.version = PathList.rootPath + 'version/latest.shtml';
 
-export default PathList;
+export { PathList };
