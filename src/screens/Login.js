@@ -5,6 +5,7 @@ import {
   View,
   Text,
   StatusBar,
+  ToastAndroid,
 } from 'react-native';
 import axios from 'axios';
 
@@ -36,6 +37,7 @@ export default class Login extends Component {
         url: login,
         data: formData,
       });
+      ToastAndroid.show(res.data.msg, ToastAndroid.BOTTOM, ToastAndroid.SHORT);
       console.log(res);
       if (res.data.msg === 'success') {
         // eslint-disable-next-line no-undef

@@ -55,6 +55,7 @@ export default class BookInfo extends Component {
         type: 'get',
       });
       let { bookCustom } = JSON.parse(resJson._bodyText);
+      console.log(bookCustom);
       this.setState({
         book: {
           bookCoverImage: { uri: url + bookCustom.bookCoverImage },
@@ -69,7 +70,7 @@ export default class BookInfo extends Component {
           bookWordCount: bookCustom.bookWordCount,
           updateCycle: bookCustom.updateCycle == 1 ? '日更' : '月更',
           isEnded: '连载中',
-          lastChapterTitle: bookCustom.lastContent.contentTitle,
+          lastChapterTitle: bookCustom.lastContent ? bookCustom.lastContent.contentTitle : '',
           bookUpdate: bookCustom.bookUpdate,
           bookIntroduction: bookCustom.bookIntroduction,
         }

@@ -407,7 +407,7 @@ export default class Rank extends Component {
             style={{ zIndex: 0 }}
             data={this.state.result}
             renderItem={({ item }) => (
-              <BookItem book={item} navigation={this.navigate} />
+              <BookItem book={item} />
             )}
             keyExtractor={this._keyExtractor}
             onEndReached={this.fetchMore}

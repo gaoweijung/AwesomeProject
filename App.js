@@ -27,19 +27,19 @@ import ChoiceSpeaker from './src/components/choiceSpeaker';
 
 const AppNavigator = createStackNavigator(
   {
+    Home,
+    Rank,
+    Passwd,
+    Login,
     NewIndex,
     Forum,
-    Home,
     Register,
     Percenter,
     ForgotPasswd,
-    Passwd,
-    Login,
     UserInfo,
     Category,
     Search,
     Menu,
-    Rank,
     Cate,
     ImportView,
     Bookcase,

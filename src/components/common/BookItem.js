@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, Image, TouchableWithoutFeedback } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Dimensions, 
+  Image, 
+  TouchableWithoutFeedback,
+ } from 'react-native';
+ import { withNavigation } from 'react-navigation';
 
 import BookTags from './BookTags';
 
@@ -11,19 +18,20 @@ const ImageBookPath = 'http://cdn.qcacg.com/Controller';
 
 
 
-export default class RecommendItem extends Component {
+class RecommendItem extends Component {
 
   constructor(props) {
     super(props);
   }
 
   navigate = () => {
-    this.props.navigate('Menu', { bookId: this.props.book.bookId});
+    const { navigation, book } = this.props;
+    const { bookId } = book;
+    navigation.navigate('Menu', { bookId });
   }
 
   render() {
     let {
-      bookId,
       bookCoverImage,
       bookName,
       bookIntroduction,
@@ -33,7 +41,7 @@ export default class RecommendItem extends Component {
 
     return (
 
-      <TouchableWithoutFeedback onPress={() => { this.navigate(bookId) }} >
+      <TouchableWithoutFeedback onPress={this.navigate} >
         <View style={{ paddingHorizontal: 30 * lu, flexDirection: 'row', height: 264 * lu, paddingTop: 30 * lu, borderTopWidth: 1 * lu, borderTopColor: 'rgb(242, 242, 242)' }}>
           <Image source={{ uri: ImageBookPath + bookCoverImage }} style={{ width: 140 * lu, height: 202 * lu, marginRight: 30 * lu, borderRadius: 8 * lu }} />
           <View style={{ width: 520 * lu, height: 202 * lu }}>
@@ -50,3 +58,5 @@ export default class RecommendItem extends Component {
     )
   }
 }
+
+export default withNavigation(RecommendItem);

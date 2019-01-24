@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import {
   View,
   TextInput,
+  ToastAndroid,
 } from 'react-native';
 
 import { lu } from '../../modules/utils/unit';
@@ -23,7 +24,9 @@ export default class UserName extends Component {
     const { telephone } = this.props;
     const { setVerifyCode } = this.props;
     const res = await fetchPhoneCode(telephone);
-    console.log(res);
+    if (res.data.msg === 'success') {
+      ToastAndroid.show('发送短信成功，请稍等', ToastAndroid.SHORT, ToastAndroid.LONG);
+    }
     setVerifyCode(res.data.data);
   }
 

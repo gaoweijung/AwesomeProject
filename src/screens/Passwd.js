@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ToastAndroid } from 'react-native';
 
 import Header from '../components/common/HeaderN';
 import NewPasswd from '../components/Passwd/NewPasswd';
@@ -58,6 +58,7 @@ export default class Passwd extends Component {
       passWordConfirm,
       uuid,
     });
+    ToastAndroid.show(res.data.msg, ToastAndroid.BOTTOM, ToastAndroid.LONG);
     console.log(res);
   }
 

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import {
-  View, Text, Dimensions, TouchableWithoutFeedback, Image,
+  View,
+  Text,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Image,
+  ToastAndroid,
 } from 'react-native';
 
 import Svg from '../svgs/Svg';
