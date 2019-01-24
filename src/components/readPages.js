@@ -309,7 +309,7 @@ export default class ReadPages extends Component{
         }
     }
     _dragMove(gestureState){
-        if(!this.dFlag){
+        if(!this.dFlag&&gestureState.dx!=0){
             if(gestureState.dx>0){
                 this.toLeft=false;          //往右滑
             }else{

@@ -1,4 +1,4 @@
-package com.awesomeproject;
+package com.qcacg;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

@@ -1,4 +1,4 @@
-package com.awesomeproject;
+package com.qcacg;
 
 import android.app.Activity;
 import android.content.Context;

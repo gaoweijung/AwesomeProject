@@ -511,7 +511,7 @@ export default class VoiceView extends Component{
         this.voicePlayer.voicePause();
     }
     _dragMove(gestureState){
-        if(!this.dFlag){
+        if(!this.dFlag&&gestureState.dy!=0){
             if(gestureState.dy!=0){
                 this.updownFlag=true;
                 this.selectView.showSelectionView();
